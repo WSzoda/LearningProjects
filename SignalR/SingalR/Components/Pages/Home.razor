@@ -1,4 +1,5 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <div class="container overflow-auto shadow-sm mb-5 p-5 bg-white rounded" style="height: 500px">
     @if (!_userMessages.Any())
@@ -9,10 +10,10 @@
     {
         @foreach (var userMessage in _userMessages)
         {
-            <div class="row mb-3 d-flex">
+            <div class="row mb-3 d-flex @(userMessage.CurrentUser ? "justify-content-end" : "")">
                 <div class="card shadow" style="width: 18rem">
                     <div class="card-header">
-                        @userMessage.Username
+                        @(userMessage.CurrentUser ? "You" : userMessage.Username)
                     </div>
                     <div class="card-body">
                         @userMessage.Message
@@ -35,7 +36,7 @@
             <textarea @bind="_messageInput" class="form-control" placeholder="Start typing..."></textarea>
         </div>
         <div class="col-3">
-            <button class="btn btn-primary" @onclick=@Send disabled="@(!IsConnected)">Send Button</button>
+            <button class="btn btn-primary" @onclick="SendMsg" disabled="@(!IsConnected)">Send Button</button>
         </div>
     </div>
 </div>

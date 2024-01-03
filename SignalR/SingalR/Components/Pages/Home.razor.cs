@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using SignalR.Models;
 
-
 namespace SignalR.Components.Pages;
 
 partial class Home : IAsyncDisposable
@@ -34,13 +33,13 @@ partial class Home : IAsyncDisposable
         Console.WriteLine("WOrks");
     }
     
-    private async Task Send()
+    private async Task SendMsg()
     {
-        Console.WriteLine("WOrks");
-        if (true)
+        if (!string.IsNullOrEmpty(_usernameInput) && !string.IsNullOrEmpty(_messageInput))
         {
             await _hubConnection!.SendAsync("SendMessage", _usernameInput, _messageInput);
-
+            
+            StateHasChanged();
             _isUserReadonly = true;
             _messageInput = string.Empty;
         }
