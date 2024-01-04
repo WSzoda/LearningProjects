@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -17,6 +18,14 @@ public class BalloonController : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        if (transform.position.y > 7)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
     
     private void FixedUpdate()
