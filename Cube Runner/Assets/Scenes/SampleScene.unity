@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 1312274181}
   - component: {fileID: 1312274180}
   - component: {fileID: 1312274179}
+  - component: {fileID: 1312274183}
   m_Layer: 0
   m_Name: Obstacle
   m_TagString: Obstacle
@@ -343,7 +344,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -408,12 +409,25 @@ Transform:
   m_GameObject: {fileID: 1312274178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 11.16}
+  m_LocalPosition: {x: 0, y: 0.5, z: 10.8}
   m_LocalScale: {x: 3, y: 2, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1312274183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312274178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d71c8b9d1e9222b4ebf25761e436506e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
 --- !u!1 &1559839373
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +562,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1726905973}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -565,7 +579,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!114 &1726905975
 MonoBehaviour:
@@ -579,6 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 041046c71ac20df429a52e9c53f0709e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpForce: 35
 --- !u!65 &1726905976
 BoxCollider:
   m_ObjectHideFlags: 0
