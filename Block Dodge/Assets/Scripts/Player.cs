@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -33,6 +34,14 @@ public class Player : MonoBehaviour
         else
         {
             _rb.velocity = Vector2.zero;
+        }
+    }
+    
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Block"))
+        {
+            SceneManager.LoadScene("Game");
         }
     }
 }
