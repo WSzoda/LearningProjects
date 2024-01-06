@@ -8,39 +8,34 @@ public class Ball : MonoBehaviour
 {
     public float xSpeed;
     public float ySpeed;
+    public GameManager gameManager;
 
     private Rigidbody2D _rb;
-
-    // private void FixedUpdate()
-    // {
-    //     transform.Translate(new Vector2(xSpeed, ySpeed));
-    // }
-
-
+    
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-
-    private void Start()
+    
+    public void LaunchBall()
     {
         _rb.AddForce(new Vector2(xSpeed, ySpeed), ForceMode2D.Impulse);
     }
-
-
-    private void OnCollisionEnter(Collision other)
+    
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        // if (other.gameObject.CompareTag("Wall"))
-        // {
-        //     xSpeed = -xSpeed;
-        // }
-        // if (other.gameObject.CompareTag("Ceiling"))
-        // {
-        //     ySpeed = -ySpeed;
-        // }
-        // if (other.gameObject.CompareTag("Ceiling"))
-        // {
-        //     ySpeed = -ySpeed;
-        // }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            gameManager.IncrementScore();
+            var vel = _rb.velocity;
+            vel *= 1.1f;
+            _rb.velocity = vel;
+        }
+
+        if (other.gameObject.CompareTag("ResetZone"))
+        {
+            gameManager.ResetGame();
+        }
+        
     }
 }
