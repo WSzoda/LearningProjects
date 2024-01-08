@@ -1,9 +1,12 @@
 using System;
+using DefaultNamespace;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Swipe : MonoBehaviour
 {
-    private enum SwipeDirection {Up, Down, Left, Right}
+    public UnityEvent<SwipeDirection> swipeHappened;
     
     private Vector3 _swipeStartPosition;
     private Vector3 _swipeEndPosition;
@@ -19,8 +22,14 @@ public class Swipe : MonoBehaviour
         {
             _swipeEndPosition = Input.GetTouch(0).position;
             Vector3 swipeDelta = _swipeEndPosition - _swipeStartPosition;
+            if (swipeDelta == Vector3.zero)
+            {
+                return;
+            }
             
             SwipeDirection swipeDirection = DetermineSwipeDirection(swipeDelta);
+            
+            swipeHappened.Invoke(swipeDirection);
         }
     }
 
@@ -37,6 +46,8 @@ public class Swipe : MonoBehaviour
             return swipeDelta.y > 0 ? SwipeDirection.Up : SwipeDirection.Down;
         }
     }
+    
+    
     
     
 }
