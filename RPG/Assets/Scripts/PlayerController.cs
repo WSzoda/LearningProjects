@@ -1,11 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     private static readonly int Running = Animator.StringToHash("IsRunning");
+    private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
+    private static readonly int YVelocity = Animator.StringToHash("yVelocity");
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
@@ -22,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private int _facingDirection = 1;
     private bool _isFacingRight = true;
     private bool _isGrounded;
+    
 
     private void Start()
     {
@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
     {
         bool isRunning = _xInput != 0f;
         _anim.SetBool(Running, isRunning);
+        _anim.SetBool(IsGrounded, _isGrounded);
+        _anim.SetFloat(YVelocity, _rb.velocity.y);
     }
 
     private void Flip()
