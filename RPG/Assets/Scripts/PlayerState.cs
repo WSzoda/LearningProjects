@@ -18,7 +18,7 @@ public class PlayerState
 
     public virtual void Enter()
     {
-        Debug.Log("Entered into " + _animBoolName);
+        Player.Anim.SetBool(_animBoolName, true);
     }
     
     public virtual void Update()
@@ -28,7 +28,7 @@ public class PlayerState
     
     public virtual void Exit()
     {
-        Debug.Log("Exited from " + _animBoolName);
+        Player.Anim.SetBool(_animBoolName, false);
     }
 
 }
