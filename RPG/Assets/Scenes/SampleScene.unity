@@ -483,6 +483,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 8.5
   jumpSpeed: 12
+  dashSpeed: 20
+  dashDuration: 0.25
+  dashCooldown: 1
   groundCheckDistance: 1.4
   groundLayerMask:
     serializedVersion: 2
