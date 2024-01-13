@@ -6,6 +6,11 @@ public class PlayerController : MonoBehaviour
     private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
     private static readonly int YVelocity = Animator.StringToHash("yVelocity");
     private static readonly int IsDashing = Animator.StringToHash("IsDashing");
+    private static readonly int ComboCounter = Animator.StringToHash("ComboCounter");
+    private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
+    
+    private Animator _anim;
+    private Rigidbody2D _rb;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
@@ -13,19 +18,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
     [SerializeField] private float dashCooldown;
-    private float dashTime;
+    private float _dashTime;
+    private float _xInput;
+    private int _facingDirection = 1;
+    private bool _isFacingRight = true;
 
     [Header("Collisions")]
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask groundLayerMask;
-
-    private Animator _anim;
-    private Rigidbody2D _rb;
-    
-    private float _xInput;
-    private int _facingDirection = 1;
-    private bool _isFacingRight = true;
     private bool _isGrounded;
+
+    [Header("Attacks")]
+    [SerializeField] private float comboTimeWindow;
+    private float _comboTimer;
+    private int _comboCounter;
+    private bool _isAttacking;
 
 
     private void Start()
@@ -52,7 +59,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (dashTime > 0)
+        if (_isAttacking)
+        {
+            _rb.velocity = Vector2.zero;
+        }
+        else if (_dashTime > 0)
         {
             Dash();
         }
@@ -61,7 +72,7 @@ public class PlayerController : MonoBehaviour
             Move();
         }
 
-        dashTime -= Time.deltaTime;
+        _dashTime -= Time.deltaTime;
     }
 
     private void HandleInput()
@@ -70,9 +81,9 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown("left shift"))
         {
-            if (dashTime < -dashCooldown)
+            if (_dashTime < -dashCooldown)
             {
-                dashTime = dashDuration;
+                _dashTime = dashDuration;
             }
         }
 
@@ -80,6 +91,31 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Attack();
+        }
+
+        _comboTimer -= Time.deltaTime;
+    }
+
+    private void Attack()
+    {
+        _isAttacking = true;
+
+        if (_comboTimer < 0)
+        {
+            _comboCounter = 0;
+        }
+    }
+
+    public void AttackStop()
+    {
+        _isAttacking = false;
+        _comboTimer = comboTimeWindow;
+        _comboCounter++;
+        _comboCounter %= 3;
     }
 
     private void Move()
@@ -103,7 +139,9 @@ public class PlayerController : MonoBehaviour
         _anim.SetBool(Running, isRunning);
         _anim.SetBool(IsGrounded, _isGrounded);
         _anim.SetFloat(YVelocity, _rb.velocity.y);
-        _anim.SetBool(IsDashing, dashTime > 0);
+        _anim.SetBool(IsDashing, _dashTime > 0);
+        _anim.SetBool(IsAttacking, _isAttacking);
+        _anim.SetInteger(ComboCounter, _comboCounter);
     }
 
     private void Flip()
