@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMoveState : PlayerGroundState
+public class PlayerAirState : PlayerState
 {
+    private static readonly int YVelocity = Animator.StringToHash("yVelocity");
 
-    public PlayerMoveState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
+    public PlayerAirState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
     }
 
@@ -17,10 +18,10 @@ public class PlayerMoveState : PlayerGroundState
     public override void Update()
     {
         base.Update();
-
-        Player.ChangeVelocity(Player.moveSpeed * xInput, Rb.velocity.y);
         
-        if (xInput == 0)
+        Player.Anim.SetFloat(YVelocity, Rb.velocity.y);
+
+        if (Player.IsGroundDetected())
         {
             StateMachine.ChangeState(Player.IdleState);
         }
