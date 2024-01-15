@@ -18,6 +18,11 @@ public class PlayerGroundState : PlayerState
     {
         base.Update();
 
+        if (!Player.IsGroundDetected())
+        {
+            StateMachine.ChangeState(Player.AirState);
+        }
+
         if (Input.GetButtonDown("Jump") && Player.IsGroundDetected())
         {
             StateMachine.ChangeState(Player.JumpState);

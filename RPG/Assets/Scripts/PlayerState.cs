@@ -10,7 +10,10 @@ public class PlayerState
     protected Rigidbody2D Rb;
 
     private string _animBoolName;
+    
     protected float xInput;
+    protected float stateTimer = 0;
+    
 
     protected PlayerState(Player player, PlayerStateMachine stateMachine, string animBoolName)
     {
@@ -28,6 +31,8 @@ public class PlayerState
     public virtual void Update()
     {
         xInput = Input.GetAxisRaw("Horizontal");
+        stateTimer -= Time.deltaTime;
+
     }
     
     public virtual void Exit()

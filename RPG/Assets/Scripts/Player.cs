@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -7,6 +8,13 @@ public class Player : MonoBehaviour
     [Header("Move info")] 
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
+    [SerializeField] private float dashCooldown;
+    private float _dashUsageTimer;
+    public float dashDuration;
+    public float dashSpeed;
+    
+    public bool IsFacingRight { get; private set; } = true;
+    public int PlayerDir { get; private set; } = 1;
 
     [Header("Collision Checks")] 
     [SerializeField] private Transform groundCheck;
@@ -30,6 +38,7 @@ public class Player : MonoBehaviour
         public PlayerMoveState MoveState { get; private set; }
         public PlayerJumpState JumpState { get; private set; }
         public PlayerAirState AirState { get; private set; }
+        public PlayerDashState DashState { get; private set; }
     #endregion
 
 
@@ -41,6 +50,7 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
         JumpState = new PlayerJumpState(this, StateMachine, "Jump");
         AirState = new PlayerAirState(this, StateMachine, "Jump");
+        DashState = new PlayerDashState(this, StateMachine, "Dash");
     }
 
     private void Start()
@@ -54,10 +64,24 @@ public class Player : MonoBehaviour
     private void Update()
     {
         StateMachine.CurrentState.Update();
+        CheckDashInput();
+    }
+
+
+    private void CheckDashInput()
+    {
+        _dashUsageTimer -= Time.deltaTime;
+        
+        if (Input.GetKeyDown("left shift") && _dashUsageTimer < 0)
+        {
+            _dashUsageTimer = dashCooldown;
+            StateMachine.ChangeState(DashState);
+        }
     }
 
     public void ChangeVelocity(float xVelocity, float yVelocity)
     {
+        FlipController(xVelocity);
         Rb.velocity = new Vector2(xVelocity, yVelocity);
     }
 
@@ -66,8 +90,28 @@ public class Player : MonoBehaviour
         var positionGroundCheck = groundCheck.position;
         Gizmos.DrawLine(positionGroundCheck, new Vector2(positionGroundCheck.x, positionGroundCheck.y - groundCheckDistance));
         var positionWallCheck = wallCheck.position;
-        Gizmos.DrawLine(positionWallCheck, new Vector2(positionWallCheck.x + wallCheckDistance, positionWallCheck.y));
+        Gizmos.DrawLine(positionWallCheck, new Vector2(positionWallCheck.x + wallCheckDistance * PlayerDir, positionWallCheck.y));
     }
+
+    private void Flip()
+    {
+        IsFacingRight = !IsFacingRight;
+        PlayerDir *= -1;
+        transform.Rotate(0, 180, 0);
+    }
+
+    public void FlipController(float x)
+    {
+        if (x < 0 && IsFacingRight)
+        {
+            Flip();
+        }
+        if (x > 0 && !IsFacingRight)
+        {
+            Flip();
+        }
+    }
+    
 
     public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsTerrain);
     public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, whatIsTerrain);
